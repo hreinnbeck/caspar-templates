@@ -1,0 +1,198 @@
+<!-- 
+     Template for HTML based graphics in CasparCG Server with Berkelium
+
+     This template was created for 1920x1090
+		 For other resolutions please see the notes below
+		 
+		 Contrary to the reccomendations for running Flash based graphics
+		 turning on 'ClearType' will result in better font-aliasing for
+		 HTML based templates.
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title></title>
+				<style>
+				* {
+				  -webkit-box-sizing: border-box;
+				  Box-Sizing:border-box;				 								 					 /* This sets all elements to be the actual set dimensions, disregarding padding and borders */
+					-webkit-backface-visibility: hidden;					 				 	 /* Hide the backface of elements - usuefull for 3d effects */
+					-webkit-transition: translate3d(0,0,0);				 		 			 /* Turns on hardware acceleration - not known to be of benefit in CCG, but won't hurt */
+				}
+				HTML, BODY {
+				  Width:1920px;  												 				 					 /* Set to your channel's resolution */
+					Height:1080px;																					 /* Set to your channel's resolution */
+					Margin:0;																								 /* Use all available space */
+					Padding:0;																							 /* Use all available space */
+					Background:transparent;												 					 /* The HTML consumer actually makes your background transparent by default, unless a color or image is specified - but this might be usefull when debugging in browsers */
+					Overflow:hidden;																				 /* Hide any overflowing elements - to disable scollbars */
+					-webkit-font-smoothing:antialiased !important;	 				 /* Set aliasing of fonts - possible options: none, antialiased,  subpixel-antialiased */
+				}
+
+				BODY {
+        	Font-Family: Calibri,Arial;
+					Color: #FFF;
+				}
+				
+				/* These are action safe grids - positions are approximate to EBU R95-2008 */
+				#action-safe, #graphics-safe {
+				  Display:none;							 	 	 					 		 						 /* Change none to visible to overlay action and graphics safe grids */
+				  Position:fixed;
+					Top:0; Left:0; Bottom:0; Right:0;
+					Opacity:0.5;
+				}
+				#action-safe {
+				  Border:2px solid green;
+					Margin:3.7%;
+					Margin-Top:2%;Margin-Bottom:2%;
+					Z-Index:99999;
+				}
+				#graphics-safe {
+				  Border:2px solid red;
+					Margin:10%;
+					Margin-Top:3.1%; Margin-Bottom:3.1%;
+					Z-Index:99998;
+				}
+				
+				/* These styles are for the demo */
+				#caspar-logo {
+				  Height:971px;
+				  Margin: auto;
+  				Position: absolute;
+					Top: 0; Left: 0; Bottom: 0; Right: 0;
+					Text-Align:center;
+				}
+				#caspar-logo IMG {
+				  Margin-left:170px;
+				  -webkit-animation: cssAnimation 10s infinite linear;
+				}
+				@-webkit-keyframes cssAnimation {
+				    0% { -webkit-transform: rotate(0deg) scale(0.95) translate(0px); }
+					 50% { -webkit-transform: rotate(0deg) scale(1) translate(0px); }
+				  100% { -webkit-transform: rotate(0deg) scale(0.95) translate(0px); }
+				}
+        .marquee {
+        	Width: 100%;
+        	Height: 100px;
+        	Overflow: hidden;
+        	Position: relative;
+        }
+        .marquee p {
+					Font-Size:80px;
+        	Position: absolute;
+        	Width: 100%;
+        	Height: 100%;
+        	Margin: 0;
+        	Text-Align: center;
+          Text-Shadow: 1px 1px 0px #000000;
+        	-webkit-transform:translateX(100%);
+        }
+        .marquee p:nth-child(1) {
+        	-webkit-animation: left-one 20s ease infinite;
+        }
+        .marquee p:nth-child(2) {
+        	-webkit-animation: left-two 20s ease infinite;
+        }
+        @-webkit-keyframes left-one {
+        	0% {
+        		-webkit-transform:translateX(100%);
+        	}
+        	10% {
+        		-webkit-transform:translateX(0);
+        	}
+        	40% {
+        		-webkit-transform:translateX(0);
+        	}
+        	50% {
+        		-webkit-transform:translateX(-100%);
+        	}
+        	100%{
+        		-webkit-transform:translateX(-100%);
+        	}
+        }
+        @-webkit-keyframes left-two {
+        	0% {
+        		-webkit-transform:translateX(100%);
+        	}
+        	50% {
+        		-webkit-transform:translateX(100%);
+        	}
+        	60% {
+        		-webkit-transform:translateX(0);		
+        	}
+        	90% {
+        		-webkit-transform:translateX(0);		
+        	}
+        	100%{
+        		-webkit-transform:translateX(-100%);
+        	}
+        }
+				</style>
+				
+				<script>
+				/* These are JavaScript commands that can be called throught the AMCP interface 
+				   Command examples are based on the assumption that demo.html is running on channel 1-1
+					 I.e. PLAY 1-1 DEMO
+				*/
+				
+				// CALL 1-1 PLAY
+        function play() {
+          document.getElementById("demo").innerHTML="play";
+        }
+				// CALL 1-1 STOP
+        function stop() {
+          document.getElementById("demo").innerHTML="stop";
+        }
+				// CALL 1-1 NEXT
+        function next() {
+				  document.getElementById("demo").innerHTML="next";
+        }
+				// CALL 1-1 REMOVE
+        function remove() {
+          document.getElementById("demo").innerHTML="remove";
+        }
+				// CALL 1-1 UPDATE STRING
+        function update(str) {
+          document.getElementById("demo").innerHTML="update: " + str;
+        }
+				// CALL 1-1 INVOKE STRING
+        function invoke(str) {
+          eval(str);
+        }
+				// CALL 1-1 INVOKE "otherFunction('testing');"
+        function otherFunction(str) {
+          document.getElementById("demo").innerHTML="Other function called with: " + str;
+        }
+				
+				// Send a log message to CasparCG
+				console.log('This message will end up in CCG logs');
+				//alert('Alerts do also');		 		 			 		 											 /* Alerts also end up in CCG logs */
+				
+				// Call a function in CCG through JS
+				if(!window.AMCP) {AMCP = function(str){ console.log(str); };}			 /* This creates a dummy window.AMCP function so testing in regular browsers doesn't throw an error */
+				window.AMCP('This is a AMCP log message from a HTML template');
+				</script>
+				
+    </head>
+    <body>
+			<!-- SAFE AREA OVERLAY - SEE CSS ABOVE FOR INFORMATION -->
+		  <div id="action-safe"></div>
+		  <div id="graphics-safe"></div>
+			<!-- //SAFE AREA OVERLAY -->
+			
+			<!-- DEMO -->
+  		<div id="caspar-logo">
+					 <!-- This is a transparent PNG -->
+  				 <img src="caspar.png" width="921" height="871">
+					 <div class="marquee">
+					   <p>WELCOME TO</p>
+						 <p>CASPARCG</p>
+					 </div>
+					 <!-- This will be updated dependent on AMCP calls -->
+					 <div id="demo"></div>
+  		</div>
+			<!-- //DEMO -->
+			
+    </body>
+</html>
