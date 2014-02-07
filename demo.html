@@ -172,6 +172,9 @@
 				// Call a function in CCG through JS
 				if(!window.AMCP) {AMCP = function(str){ console.log(str); };}			 /* This creates a dummy window.AMCP function so testing in regular browsers doesn't throw an error */
 				window.AMCP('This is a AMCP log message from a HTML template');
+				
+				// Define onEnterFrame() to minimize errors in CCG logs
+				funtion onEnterFrame() {}
 				</script>
 				
     </head>
